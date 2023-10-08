@@ -21,6 +21,11 @@ function colourPicker.toggle(toggleValue)
 	models.colourPicker.GUI.HUD.colourPicker:setVisible(toggleValue)
 	host:setUnlockCursor(toggleValue)
 	client:isHudEnabled(not toggleValue)
+	if toggleValue then
+		renderer:setCrosshairOffset(9999,0)
+	else
+		renderer:setCrosshairOffset(0,0)
+	end
 end
 
 colourPicker.updateColours()
