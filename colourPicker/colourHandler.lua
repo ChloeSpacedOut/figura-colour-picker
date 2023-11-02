@@ -1,4 +1,5 @@
 if not host:isHost() then return end
+require('colourPicker.tables')
 colourPicker.textFields = {}
 
 local highlightsPath = models.colourPicker.GUI.HUD.colourPicker.highlights

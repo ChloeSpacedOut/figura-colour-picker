@@ -1,4 +1,5 @@
 if not host:isHost() then return end
+require('colourPicker.tables')
 for k = 0,54 do
 	textures['colourPicker.textures.hueSideSliderColour']:setPixel(0,k,vectors.hsvToRGB(-k/54,1,1))
 end
