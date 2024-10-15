@@ -1,8 +1,10 @@
 if not host:isHost() then return end
 require('colourPicker.tables')
 colourPicker.textFields = {}
+local coloursTexture = textures['colourPicker.textures.colours']
 
-local highlightsPath = models.colourPicker.GUI.HUD.colourPicker.highlights
+local colourPickerPath = models.colourPicker.GUI.HUD.colourPicker
+local highlightsPath = colourPickerPath.highlights
 colourPicker.textFields.red = highlightsPath.red:newText('red'):setAlignment("RIGHT"):pos(-13,0,-10)
 colourPicker.textFields.green = highlightsPath.green:newText('green'):setAlignment("RIGHT"):pos(-13,0,-10)
 colourPicker.textFields.blue = highlightsPath.blue:newText('blue'):setAlignment("RIGHT"):pos(-13,0,-10)
@@ -14,41 +16,56 @@ colourPicker.textFields.vibrance = highlightsPath.vibrance:newText('vibrance'):s
 colourPicker.textFields.hex = highlightsPath.hex:newText('hex'):setAlignment("CENTER"):pos(0,0,-10)
 colourPicker.textFields.save = highlightsPath.save:newText('save'):setAlignment("CENTER"):pos(0,0,-10):setText('OK')
 
+for _, v in pairs{
+	colourPickerPath.textures.selectorSliderColour,
+	colourPickerPath.textures.hueSideSliderColour,
+	colourPickerPath.textures.redSliderColour,
+	colourPickerPath.textures.greenSliderColour,
+	colourPickerPath.textures.blueSliderColour,
+	colourPickerPath.textures.hueSliderColour,
+	colourPickerPath.textures.saturationSliderColour,
+	colourPickerPath.textures.vibranceSliderColour,
+} do
+	v:primaryRenderType('blurry')
+end
+
 notification = models.colourPicker.GUI.HUD.colourPicker.textures.notification:newText('notification'):setAlignment("CENTER")
 
 function colourPicker.updateColours()
 	local selectedColourRGB = vectors.hsvToRGB(selectedColour)
-	for k = 0, 31 do
-		textures['colourPicker.textures.redSliderColour']:setPixel(k,0,k/31,selectedColourRGB.y,selectedColourRGB.z)
-		textures['colourPicker.textures.greenSliderColour']:setPixel(k,0,selectedColourRGB.x,k/31,selectedColourRGB.z)
-		textures['colourPicker.textures.blueSliderColour']:setPixel(k,0,selectedColourRGB.x,selectedColourRGB.y,k/31)
 
-		textures['colourPicker.textures.hueSliderColour']:setPixel(k,0,vectors.hsvToRGB(k/31,selectedColour.y,selectedColour.z))
-		textures['colourPicker.textures.saturationSliderColour']:setPixel(k,0,vectors.hsvToRGB(selectedColour.x,k/31,selectedColour.z))
-		textures['colourPicker.textures.vibranceSliderColour']:setPixel(k,0,vectors.hsvToRGB(selectedColour.x,selectedColour.y,k/31))
+	-- for k = 0, 31 do
+	-- 	textures['colourPicker.textures.redSliderColour']:setPixel(k,0,k/31,selectedColourRGB.y,selectedColourRGB.z)
+	-- 	textures['colourPicker.textures.greenSliderColour']:setPixel(k,0,selectedColourRGB.x,k/31,selectedColourRGB.z)
+	-- 	textures['colourPicker.textures.blueSliderColour']:setPixel(k,0,selectedColourRGB.x,selectedColourRGB.y,k/31)
+
+	-- 	textures['colourPicker.textures.hueSliderColour']:setPixel(k,0,vectors.hsvToRGB(k/31,selectedColour.y,selectedColour.z))
+	-- 	textures['colourPicker.textures.saturationSliderColour']:setPixel(k,0,vectors.hsvToRGB(selectedColour.x,k/31,selectedColour.z))
+	-- 	textures['colourPicker.textures.vibranceSliderColour']:setPixel(k,0,vectors.hsvToRGB(selectedColour.x,selectedColour.y,k/31))
+	-- end
+
+	coloursTexture:setPixel(6, 0, 0, selectedColourRGB.g, selectedColourRGB.b)
+	coloursTexture:setPixel(7, 0, 1, selectedColourRGB.g, selectedColourRGB.b)
+	coloursTexture:setPixel(6, 1, selectedColourRGB.r, 0, selectedColourRGB.b)
+	coloursTexture:setPixel(7, 1, selectedColourRGB.r, 1, selectedColourRGB.b)
+	coloursTexture:setPixel(6, 2, selectedColourRGB.r, selectedColourRGB.g, 0)
+	coloursTexture:setPixel(7, 2, selectedColourRGB.r, selectedColourRGB.g, 1)
+
+	coloursTexture:setPixel(3, 3, vectors.hsvToRGB(selectedColour.x, 0, selectedColour.z))
+	coloursTexture:setPixel(4, 3, vectors.hsvToRGB(selectedColour.x, 1, selectedColour.z))
+
+	coloursTexture:setPixel(4, 4, vectors.hsvToRGB(selectedColour.x, selectedColourRGB.y, 1))
+
+	for i = 0, 6 do
+		coloursTexture:setPixel(1, i, vectors.hsvToRGB(i / 6, selectedColour.y, selectedColour.z))
 	end
 
-	for x = 0, 23 do
-		for y = 0, 54 do
-			textures['colourPicker.textures.selectorSliderColour']:setPixel(x,y,vectors.hsvToRGB(selectedColour.x,x/23,1-y/54))
-		end
-	end
-	
-	textures['colourPicker.textures.currentColourPreview']:setPixel(0,0,selectedColourRGB)
-	textures['colourPicker.textures.lastColourPreview']:setPixel(0,0,vectors.hsvToRGB(lastColour))
+	coloursTexture:setPixel(4, 0, vectors.hsvToRGB(selectedColour.x, 1, 1))
 
-	textures['colourPicker.textures.redSliderColour']:update()
-	textures['colourPicker.textures.greenSliderColour']:update()
-	textures['colourPicker.textures.blueSliderColour']:update()
+	coloursTexture:setPixel(7, 7, selectedColourRGB)
+	coloursTexture:setPixel(6, 7, vectors.hsvToRGB(lastColour))
 
-	textures['colourPicker.textures.hueSliderColour']:update()
-	textures['colourPicker.textures.saturationSliderColour']:update()
-	textures['colourPicker.textures.vibranceSliderColour']:update()
-
-	textures['colourPicker.textures.selectorSliderColour']:update()
-
-	textures['colourPicker.textures.currentColourPreview']:update()
-	textures['colourPicker.textures.lastColourPreview']:update()
+	coloursTexture:update()
 
 	for k,v in pairs(colourPicker.colorFeildMetadata) do
 		if v.type == 'rgb' then
