@@ -3,9 +3,9 @@ require('colourPicker.tables')
 require('colourPicker.UIHandler')
 require('colourPicker.colourHandler')
 local loadedData = config:load('colourPicker')
-if loadedData then
+if loadedData and type(loadedData) == 'Vector3' then
 	selectedColour = loadedData
-	lastColour = loadedData
+	lastColour = loadedData:copy()
 else
 	selectedColour = vec(0.73583,0.523,0.937)
 	lastColour = vec(0.73583,0.523,0.937)
@@ -28,8 +28,3 @@ function colourPicker.toggle(toggleValue)
 end
 
 colourPicker.updateColours()
-
-
-
-
-

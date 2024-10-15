@@ -3,24 +3,23 @@ require('colourPicker.tables')
 require('colourPicker.UIHandler')
 require('colourPicker.colourHandler')
 local loadedData = config:load('colourPicker')
-if loadedData then
+if loadedData and type(loadedData) == 'Vector3' then
 	selectedColour = loadedData
-	lastColour = loadedData
+	lastColour = loadedData:copy()
 else
 	selectedColour = vec(0.73583,0.523,0.937)
 	lastColour = vec(0.73583,0.523,0.937)
 end
 
 function colourPicker.onSubmit(colour)
-	-- code here is executed when the colour is choses, and the colour picker is closed
+	models.model.cube:setColor(colour)
 end
 
 function colourPicker.toggle(toggleValue)
-	-- this function toggles the colour picker. Run it to choose if its UI should be enabled / disabled
-	colourPicker.isEnabled = toggleValue
-	models.colourPicker.GUI.HUD.colourPicker:setVisible(toggleValue)
-	host:setUnlockCursor(toggleValue)
-	client:isHudEnabled(not toggleValue)
+  colourPicker.isEnabled = toggleValue
+  models.colourPicker.GUI.HUD.colourPicker:setVisible(toggleValue)
+  host:setUnlockCursor(toggleValue)
+  client:isHudEnabled(not toggleValue)
 	if toggleValue then
 		renderer:setCrosshairOffset(9999,0)
 	else
@@ -29,8 +28,3 @@ function colourPicker.toggle(toggleValue)
 end
 
 colourPicker.updateColours()
-
-
-
-
-
